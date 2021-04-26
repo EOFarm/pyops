@@ -135,13 +135,13 @@ class Client(object):
                 except Exception:  # particular case
                     self.search_template_tag = tree.find('{http://a9.com/-/spec/opensearch/1.1/}Url[@type="application/atom+xml"]')
                 # particular case
-                if self.search_template_tag is None or not len(self.search_template_tag):
+                if self.search_template_tag is None:
                     self.search_template_tag = tree.find('{http://a9.com/-/spec/opensearch/1.1/}Url[@type="application/atom+xml"]')
                 # particular case
-                if self.search_template_tag is None or not len(self.search_template_tag):
+                if self.search_template_tag is None:
                     self.search_template_tag = tree.find('{http://a9.com/-/spec/opensearch/1.1/}Url[@type="application/rss+xml"]')
                 # particular case
-                if self.search_template_tag is None or not len(self.search_template_tag):
+                if self.search_template_tag is None:
                     self.search_template_tag = tree.find('{http://a9.com/-/spec/opensearch/1.1/}Url[@type="text/html"]')
 
                 self.search_template_url = self.search_template_tag.get('template')
@@ -307,6 +307,8 @@ class Client(object):
                 if value:
                     self.search_url = self.search_url.replace(sp_tag, value)
                 else:
+                    repl = f"{sp_indx.replace('_', ':')}={sp_tag}"
+                    self.search_url = self.search_url.replace(repl, '')
                     self.search_url = re.sub(r'&\w+=' + sp_tag.replace('?', '\?'), '', self.search_url)
                     self.search_url = re.sub(r'\?\w+=' + sp_tag.replace('?', '\?'), '', self.search_url)
             logger.debug('  > Search URL: %s' % self.search_url)
